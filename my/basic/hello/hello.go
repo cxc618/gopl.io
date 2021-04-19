@@ -2,12 +2,14 @@ package main
 
 import (
 	"fmt"
+	"gopl.io/my/basic/greetings"
 	"os"
 )
 
 func main()  {
 	if len(os.Args) == 2 {
-		fmt.Printf("Hello, %s\n", os.Args[1])
+		message := greetings.Hello(os.Args[1])
+		fmt.Printf(message)
 	} else {
 		fmt.Printf("error args %s\n", os.Args)
 	}
