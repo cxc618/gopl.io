@@ -1,6 +1,8 @@
 package main
 
 import (
+	"encoding/json"
+	"errors"
 	"github.com/labstack/echo/v4"
 	"net/http"
 )
@@ -28,14 +30,28 @@ func main()  {
 		// or
 		// return c.XML(http.StatusCreated, u)
 	})
+	e.GET("/api/v2/project/obs/:id/getProjectObsBind", uni)
 
-	e.Logger.Fatal(e.Start(":1323"))
+	e.Logger.Fatal(e.Start(":1333"))
 }
 
 func getUser(c echo.Context) error {
 	id := c.Param("id")
 
 	return c.String(http.StatusOK, id)
+}
+
+func uni(c echo.Context) error {
+	id := c.Param("id")
+	if id == "1" {
+		return errors.New("id error")
+	}
+	in := []byte(`{"code":4,"msg":null,"data":{"projectId":3855,"obsProductId":11,"obsPlanProductId":539,"yjnTiUni":"4444","id":5,"createAt":1111111,"updateAt":11111111}}`)
+	var raw map[string]interface{}
+	if err := json.Unmarshal(in, &raw); err != nil {
+		panic(err)
+	}
+	return c.JSON(http.StatusOK, raw)
 }
 
 

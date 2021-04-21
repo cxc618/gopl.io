@@ -158,4 +158,5 @@ func main() {
 	// }
 	// issue, _, _ := client.IssueService.Create("dghubble", "temp", body)
 	// fmt.Println(issue)
+	sling.New().Get("hh").BodyJSON()
 }
