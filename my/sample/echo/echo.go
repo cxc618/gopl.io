@@ -7,11 +7,6 @@ import (
 	"net/http"
 )
 
-type User struct {
-	Name  string `json:"name" xml:"name" form:"name" query:"name"`
-	Email string `json:"email" xml:"email" form:"email" query:"email"`
-}
-
 func main()  {
 	e := echo.New()
 	e.GET("/", func(c echo.Context) error {
@@ -21,16 +16,8 @@ func main()  {
 	e.GET("/users/:id", getUser)
 	e.GET("/show", show)
 
-	e.POST("/users", func(c echo.Context) error {
-		u := new(User)
-		if err := c.Bind(u); err != nil {
-			return err
-		}
-		return c.JSON(http.StatusCreated, u)
-		// or
-		// return c.XML(http.StatusCreated, u)
-	})
 	e.GET("/api/v2/project/obs/:id/getProjectObsBind", uni)
+	e.POST("/apis/v1/GetTempSecret", tempSecret)
 
 	e.Logger.Fatal(e.Start(":1333"))
 }
@@ -46,7 +33,16 @@ func uni(c echo.Context) error {
 	if id == "1" {
 		return errors.New("id error")
 	}
-	in := []byte(`{"code":4,"msg":null,"data":{"projectId":3855,"obsProductId":11,"obsPlanProductId":539,"yjnTiUni":"4444","id":5,"createAt":1111111,"updateAt":11111111}}`)
+
+	return commonResult(c, `{"code":0,"msg":null,"data":{"projectId":3855,"obsProductId":11,"obsPlanProductId":539,"yjnTiUni":"4444","id":5,"createAt":1111111,"updateAt":11111111}}`)
+}
+
+func tempSecret(c echo.Context) error {
+	return commonResult(c, `{"Code":0,"Data":{"SecretId":"sec","SecretKey":"xxxx","Token":"12345","ExpiredTime":3223}}`)
+}
+
+func commonResult(c echo.Context, result string) error {
+	in := []byte(result)
 	var raw map[string]interface{}
 	if err := json.Unmarshal(in, &raw); err != nil {
 		panic(err)
